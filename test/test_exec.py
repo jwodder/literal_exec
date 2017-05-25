@@ -1,4 +1,5 @@
 from literal_exec import literal_exec
+from six          import text_type
 
 def test_simple():
     assert literal_exec('''
@@ -40,3 +41,57 @@ foo = 'bar'
 bar = range(42)
 baz = 42
 ''') == {"foo": "bar", "baz": 42}
+
+def test_list_assign_skip_nonliteral():
+    assert literal_exec('foo, bar, baz = "quux", range(42), "glarch"') \
+        == {"foo": "quux", "baz": "glarch"}
+
+def test_docstring():
+    assert literal_exec('''
+""" This is a module docstring.  It is stored in __doc__. """
+''') == {"__doc__": " This is a module docstring.  It is stored in __doc__. "}
+
+def test_faux_docstring_after_assignment():
+    assert literal_exec('''
+foo = 'bar'
+""" This is not a module docstring.  It is not stored in __doc__. """
+''') == {"foo": "bar"}
+
+def test_faux_docstring_after_import():
+    assert literal_exec('''
+import sys
+""" This is not a module docstring.  It is not stored in __doc__. """
+''') == {}
+
+def test_faux_docstring_after_future_import():
+    assert literal_exec('''
+from __future__ import unicode_literals
+""" This is not a module docstring.  It is not stored in __doc__. """
+''') == {}
+
+def test_unicode_literals():
+    vals = literal_exec('''
+from __future__ import unicode_literals
+foo = 'bar'
+''')
+    assert vals == {"foo": u"bar"}
+    assert isinstance(vals["foo"], text_type)
+
+def test_unicode_literals_docstring():
+    vals = literal_exec('''
+""" This is a module docstring.  It is stored in __doc__. """
+from __future__ import unicode_literals
+''')
+    assert vals == {
+        "__doc__": u" This is a module docstring.  It is stored in __doc__. "
+    }
+    assert isinstance(vals["__doc__"], text_type)
+
+# unicode_literals in bad location
+# comments
+# ignoring imports
+# function & class definitions
+# concatenation of adjacent string literals
+# source file encodings
+# exec'ing Unicode in Python 2?
+# exec'ing bytes in Python 3?
