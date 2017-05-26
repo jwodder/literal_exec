@@ -22,22 +22,38 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
     """
     top_level = ast.parse(src)
     result = {}
+    doc = ast.get_docstring(top_level, clean=False)
+    if doc is not None:
+        result["__doc__"] = doc
     for statement in top_level.body:
-        if not isinstance(statement, ast.Assign):
-            if strict:
-                raise NonLiteralAssignmentError()
-            continue
-        try:
-            value = ast.literal_eval(statement.value)
-        except (TypeError, ValueError):
-            if strict:
-                raise NonLiteralAssignmentError()
-            elif delete_nonliteral:
+        if isinstance(statement, ast.Assign):
+            try:
+                value = ast.literal_eval(statement.value)
+            except (TypeError, ValueError):
+                if strict:
+                    raise NonLiteralAssignmentError()
+                elif delete_nonliteral:
+                    for target in statement.targets:
+                        result.pop(target.id, None)
+            else:
                 for target in statement.targets:
-                    result.pop(target.id, None)
+                    result[target.id] = value
+        elif isinstance(statement, ast.Expr):
+            if strict:
+                try:
+                    ast.literal_eval(statement.value)
+                except (TypeError, ValueError):
+                    raise NonLiteralAssignmentError()
+        elif isinstance(statement, ast.ImportFrom):
+            if statement.module == '__future__' and not statement.level:
+                pass
+            elif strict:
+                raise NonLiteralAssignmentError()
+        elif isinstance(statement, ast.Pass):
+            pass
         else:
-            for target in statement.targets:
-                result[target.id] = value
+            if strict:
+                raise NonLiteralAssignmentError()
     return result
 
 class NonLiteralAssignmentError(ValueError):
