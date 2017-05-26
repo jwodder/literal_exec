@@ -84,6 +84,32 @@ from __future__ import unicode_literals
     }
     assert isinstance(vals["__doc__"], text_type)
 
+def test_reassignment_delete_nonliteral():
+    assert literal_exec('''
+foo = 'value #1'
+foo = range(42)
+''', delete_nonliteral=True) == {}
+
+def test_reassignment_nodelete_nonliteral():
+    assert literal_exec('''
+foo = 'value #1'
+foo = range(42)
+''', delete_nonliteral=False) == {"foo": "value #1"}
+
+def test_re_reassignment_delete_nonliteral():
+    assert literal_exec('''
+foo = 'value #1'
+foo = range(42)
+foo = 'value #2'
+''', delete_nonliteral=True) == {"foo": "value #2"}
+
+def test_re_reassignment_nodelete_nonliteral():
+    assert literal_exec('''
+foo = 'value #1'
+foo = range(42)
+foo = 'value #2'
+''', delete_nonliteral=False) == {"foo": "value #2"}
+
 # unicode_literals in bad location
 # comments
 # ignoring imports

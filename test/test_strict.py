@@ -89,6 +89,36 @@ from __future__ import unicode_literals
     }
     assert isinstance(vals["__doc__"], text_type)
 
+def test_reassignment_delete_nonliteral():
+    with pytest.raises(NonLiteralAssignmentError):
+        literal_exec('''
+foo = 'value #1'
+foo = range(42)
+''', strict=True, delete_nonliteral=True)
+
+def test_reassignment_nodelete_nonliteral():
+    with pytest.raises(NonLiteralAssignmentError):
+        literal_exec('''
+foo = 'value #1'
+foo = range(42)
+''', strict=True, delete_nonliteral=False)
+
+def test_re_reassignment_delete_nonliteral():
+    with pytest.raises(NonLiteralAssignmentError):
+        literal_exec('''
+foo = 'value #1'
+foo = range(42)
+foo = 'value #2'
+''', strict=True, delete_nonliteral=True)
+
+def test_re_reassignment_nodelete_nonliteral():
+    with pytest.raises(NonLiteralAssignmentError):
+        literal_exec('''
+foo = 'value #1'
+foo = range(42)
+foo = 'value #2'
+''', strict=True, delete_nonliteral=False)
+
 # comments
 # imports
 # function & class definitions
