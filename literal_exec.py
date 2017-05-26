@@ -27,9 +27,17 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
             if strict:
                 raise NonLiteralAssignmentError()
             continue
-        value = ast.literal_eval(statement.value)
-        for target in statement.targets:
-            result[target.id] = value
+        try:
+            value = ast.literal_eval(statement.value)
+        except (TypeError, ValueError):
+            if strict:
+                raise NonLiteralAssignmentError()
+            elif delete_nonliteral:
+                for target in statement.targets:
+                    result.pop(target.id, None)
+        else:
+            for target in statement.targets:
+                result[target.id] = value
     return result
 
 class NonLiteralAssignmentError(ValueError):
