@@ -1,16 +1,9 @@
 import errno
-from   os.path    import dirname, join
-import re
-from   setuptools import setup
+from   os.path      import dirname, join
+from   setuptools   import setup
+from   literal_exec import literal_execfile
 
-with open(join(dirname(__file__), 'literal_exec.py')) as fp:
-    for line in fp:
-        m = re.search(r'^\s*__version__\s*=\s*([\'"])([^\'"]+)\1\s*$', line)
-        if m:
-            version = m.group(2)
-            break
-    else:
-        raise RuntimeError('Unable to find own __version__ string')
+metadata = literal_execfile(join(dirname(__file__), 'literal_exec.py'))
 
 try:
     with open(join(dirname(__file__), 'README.rst')) as fp:
@@ -23,7 +16,7 @@ except EnvironmentError as e:
 
 setup(
     name='literal_exec',
-    version=version,
+    version=metadata["__version__"],
     py_modules=['literal_exec'],
     license='MIT',
     author='John Thorvald Wodder II',
