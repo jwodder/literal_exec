@@ -89,6 +89,13 @@ from __future__ import unicode_literals
     }
     assert isinstance(vals["__doc__"], text_type)
 
+def test_faux_unicode_literals_docstring():
+    with pytest.raises(NonLiteralAssignmentError):
+        literal_exec('''
+""" This is a module docstring.  It is stored in __doc__. """
+from .__future__ import unicode_literals
+''', strict=True)
+
 def test_reassignment_delete_nonliteral():
     with pytest.raises(NonLiteralAssignmentError):
         literal_exec('''
@@ -118,6 +125,9 @@ foo = 'value #1'
 foo = range(42)
 foo = 'value #2'
 ''', strict=True, delete_nonliteral=False)
+
+def test_concat_str_literals():
+    assert literal_exec('foo = "bar" "baz"', strict=True) == {"foo": "barbaz"}
 
 # comments
 # imports

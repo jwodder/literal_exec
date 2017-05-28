@@ -84,6 +84,16 @@ from __future__ import unicode_literals
     }
     assert isinstance(vals["__doc__"], text_type)
 
+def test_faux_unicode_literals_docstring():
+    vals = literal_exec('''
+""" This is a module docstring.  It is stored in __doc__. """
+from .__future__ import unicode_literals
+''')
+    assert vals == {
+        "__doc__": " This is a module docstring.  It is stored in __doc__. "
+    }
+    assert isinstance(vals["__doc__"], str)
+
 def test_reassignment_delete_nonliteral():
     assert literal_exec('''
 foo = 'value #1'
@@ -110,12 +120,15 @@ foo = range(42)
 foo = 'value #2'
 ''', delete_nonliteral=False) == {"foo": "value #2"}
 
+def test_concat_str_literals():
+    assert literal_exec('foo = "bar" "baz"') == {"foo": "barbaz"}
+
 # unicode_literals in bad location
 # comments
 # ignoring imports
 # function & class definitions
-# concatenation of adjacent string literals
 # source file encodings
 # exec'ing Unicode in Python 2?
 # exec'ing bytes in Python 3?
 # raising/causing an error in the middle of the source?
+# a, *b, c = ... (Python 3.0+)
