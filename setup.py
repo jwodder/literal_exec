@@ -21,10 +21,12 @@ setup(
     license='MIT',
     author='John Thorvald Wodder II',
     author_email='literal-exec@varonathe.org',
-    ###keywords='',
-    ###description='',
+    keywords='parsing eval exec constants literals configfile ast variables',
+    description='Parse literal variable assignments from source files',
     long_description=long_desc,
     url='https://github.com/jwodder/literal_exec',
+
+    python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, <4',
 
     install_requires=[],
 
@@ -45,7 +47,9 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
 
         'License :: OSI Approved :: MIT License',
-
-        ###
+        'Intended Audience :: Developers',
+        'Intended Audience :: Information Technology',
+        'Topic :: Software Development :: Interpreters',
+        'Topic :: Text Processing :: Filters',
     ],
 )

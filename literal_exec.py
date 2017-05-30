@@ -1,3 +1,5 @@
+""" Parse literal variable assignments from source files """
+
 __version__      = '0.1.0.dev1'
 __author__       = 'John Thorvald Wodder II'
 __author_email__ = 'literal-exec@varonathe.org'
@@ -51,9 +53,8 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
                 raise NonLiteralAssignmentError()
         elif isinstance(statement, ast.Pass):
             pass
-        else:
-            if strict:
-                raise NonLiteralAssignmentError()
+        elif strict:
+            raise NonLiteralAssignmentError()
     return result
 
 class NonLiteralAssignmentError(ValueError):
