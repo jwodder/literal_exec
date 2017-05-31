@@ -18,13 +18,13 @@ setup(
     name='literal_exec',
     version=metadata["__version__"],
     py_modules=['literal_exec'],
-    license='MIT',
-    author='John Thorvald Wodder II',
-    author_email='literal-exec@varonathe.org',
+    license=metadata["__license__"],
+    author=metadata["__author__"],
+    author_email=metadata["__author_email__"],
     keywords='parsing eval exec constants literals configfile ast variables',
-    description='Parse literal variable assignments from source files',
+    description=metadata["__doc__"].strip().splitlines()[0].strip(),
     long_description=long_desc,
-    url='https://github.com/jwodder/literal_exec',
+    url=metadata["__url__"],
 
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, <4',
 
