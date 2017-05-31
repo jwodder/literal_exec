@@ -44,6 +44,15 @@ def test_re_reassignment_nonliteral(strict_xfail, delete_nonliteral):
         delete_nonliteral=delete_nonliteral,
     ) == {"foo": "value #2"}
 
+def test_parse_print_function(strict_xfail, delete_nonliteral):
+    assert literal_exec(
+        "from __future__ import print_function\n"
+        "def echo(*args):\n"
+        "    print(*args, sep='')\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    ) == {}
+
 # imports
 # function & class definitions
 # raising/causing an error in the middle of the source?
