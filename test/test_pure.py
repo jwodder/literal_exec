@@ -195,3 +195,4 @@ def test_unicode_input(strict, delete_nonliteral):
 # bytes literals
 # variable annotations?
 # complex number literals
+# reassigning __doc__

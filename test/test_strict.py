@@ -53,6 +53,34 @@ def test_parse_print_function(strict_xfail, delete_nonliteral):
         delete_nonliteral=delete_nonliteral,
     ) == {}
 
-# imports
+def test_import(strict_xfail, delete_nonliteral):
+    assert literal_exec(
+        "foo = 'bar'\nimport baz\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    ) == {"foo": "bar"}
+
+def test_reassign_import(strict_xfail, delete_nonliteral):
+    assert literal_exec(
+        "import foo\nfoo = 'bar'\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    ) == {"foo": "bar"}
+
+def test_import_as_no_reassign(strict_xfail, delete_nonliteral):
+    assert literal_exec(
+        "foo = 'bar'\nimport foo as baz\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    ) == {"foo": "bar"}
+
+def test_from_import_no_reassign(strict_xfail, delete_nonliteral):
+    assert literal_exec(
+        "foo = 'bar'\nfrom foo import quux\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    ) == {"foo": "bar"}
+
 # function & class definitions
 # raising/causing an error in the middle of the source?
+# variables that are only ever assigned nonliteral expressions
