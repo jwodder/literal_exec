@@ -26,7 +26,7 @@ setup(
     long_description=long_desc,
     url=metadata["__url__"],
 
-    python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, <4',
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, <4',
 
     install_requires=[],
 
@@ -36,7 +36,6 @@ setup(
         #'Development Status :: 5 - Production/Stable',
 
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
