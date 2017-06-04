@@ -1,3 +1,0 @@
-http://softwarerecs.stackexchange.com/q/38958/19264
-https://github.com/jaraco/rwt/blob/d1c21a174bb3d84b9964939cd093f224ff35accb/rwt/scripts.py#L56
-https://github.com/takluyver/astsearch

@@ -28,3 +28,10 @@ another solution to the problem of `single-sourcing Python project versions
 <https://packaging.python.org/single_source_version/>`_ (though the latter use
 won't really become fully viable until ``pyproject.toml`` support is more
 widespread).
+
+
+Related Prior Art
+=================
+- https://github.com/takluyver/astsearch
+- ``rwt``: Extracting ``__requires__``: https://git.io/vHaJA
+- http://softwarerecs.stackexchange.com/q/38958/19264
