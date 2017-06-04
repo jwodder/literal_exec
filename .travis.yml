@@ -13,3 +13,7 @@ script:
     - tox -e py
 after_script:
     - coveralls
+notifications:
+    email:
+        on_success: change
+        on_failure: change
