@@ -1,13 +1,15 @@
 import pytest
 from   literal_exec import NonLiteralAssignmentError
 
-def pytest_generate_tests(metafunc):
-    if 'strict' in metafunc.fixturenames:
-        metafunc.parametrize("strict", [False, True])
-    if 'strict_xfail' in metafunc.fixturenames:
-        metafunc.parametrize("strict_xfail", [
-            False,
-            pytest.param(True, marks=pytest.mark.xfail(strict=True, raises=NonLiteralAssignmentError)),
-        ])
-    if 'delete_nonliteral' in metafunc.fixturenames:
-        metafunc.parametrize("delete_nonliteral", [False, True])
+def parameter_fixture(*params):
+    return pytest.fixture(params=params)(lambda request: request.param)
+
+strict = delete_nonliteral = parameter_fixture(False, True)
+
+strict_xfail = parameter_fixture(
+    False,
+    pytest.param(
+        True,
+        marks=pytest.mark.xfail(strict=True, raises=NonLiteralAssignmentError),
+    ),
+)
