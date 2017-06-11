@@ -63,11 +63,11 @@ Intended Behavior
 
 - The following are completely ignored:
 
-   - blank lines
-   - comments (except possibly for an encoding declaration)
-   - non-docstring statements consisting entirely of literal values and
-     (optionally) operations upon them (e.g., ``2 + 2``, ``'foo' * 5``)
-   - ``pass`` statements
+  - blank lines
+  - comments (except possibly for an encoding declaration)
+  - non-docstring statements consisting entirely of literal values and
+    (optionally) operations upon them (e.g., ``2 + 2``, ``'foo' * 5``)
+  - ``pass`` statements
 
 - If ``strict`` is ``True``, a statement that is not a literal assignment, a
   ``__future__`` import, a docstring, or otherwise ignored will cause a
