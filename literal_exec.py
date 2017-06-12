@@ -7,6 +7,7 @@ __license__      = 'MIT'
 __url__          = 'https://github.com/jwodder/literal_exec'
 
 import ast
+import sys
 
 def literal_execfile(path, strict=False, delete_nonliteral=True):
     with open(path) as fp:
@@ -30,7 +31,7 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
     for statement in top_level.body:
         if isinstance(statement, ast.Assign):
             try:
-                value = ast.literal_eval(statement.value)
+                value = literal_eval(statement.value)
             except (TypeError, ValueError):
                 if strict:
                     raise NonLiteralAssignmentError()
@@ -43,7 +44,7 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
         elif isinstance(statement, ast.Expr):
             if strict:
                 try:
-                    ast.literal_eval(statement.value)
+                    literal_eval(statement.value)
                 except (TypeError, ValueError):
                     raise NonLiteralAssignmentError()
         elif isinstance(statement, ast.ImportFrom):
@@ -56,6 +57,31 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
         elif strict:
             raise NonLiteralAssignmentError()
     return result
+
+def literal_eval(expr):
+    """
+    Like `ast.literal_eval`, except it also supports:
+
+    - set literals (not supported by Python 2's `ast.literal_eval`)
+    - ``...`` (Python 3)
+    """
+    try:
+        return ast.literal_eval(expr)
+    except (TypeError, ValueError):
+        if isinstance(expr, str):
+            expr = ast.parse(expr, mode='eval')
+            assert isinstance(expr, ast.Expression)
+            expr = expr.body
+        elif isinstance(expr, ast.Expression):
+            expr = expr.body
+        elif not isinstance(expr, ast.expr):
+            raise TypeError
+        if isinstance(expr, ast.Ellipsis):
+            return Ellipsis
+        elif isinstance(expr, ast.Set) and sys.version_info[0] == 2:
+            return set(literal_eval(e) for e in expr.elts)
+        else:
+            raise ValueError
 
 class NonLiteralAssignmentError(ValueError):
     ### TODO: Come up with a better name
