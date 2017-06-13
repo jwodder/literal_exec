@@ -44,36 +44,36 @@ def test_import_over(strict_xfail, delete_nonliteral):
 
 def test_import_as_over(strict_xfail, delete_nonliteral):
     vals = literal_exec(
-        "foo = 'bar'\nimport baz as foo\n",
+        "foo = 'bar'\nbaz = 'quux'\nimport baz as foo\n",
         strict=strict_xfail,
         delete_nonliteral=delete_nonliteral,
     )
     if delete_nonliteral:
-        assert vals == {}
+        assert vals == {"baz": "quux"}
     else:
-        assert vals == {"foo": "bar"}
+        assert vals == {"foo": "bar", "baz": "quux"}
 
 def test_from_import_over(strict_xfail, delete_nonliteral):
     vals = literal_exec(
-        "foo = 'bar'\nfrom quux import foo\n",
+        "foo = 'bar'\nquux = 'baz'\nfrom quux import foo\n",
         strict=strict_xfail,
         delete_nonliteral=delete_nonliteral,
     )
     if delete_nonliteral:
-        assert vals == {}
+        assert vals == {"quux": "baz"}
     else:
-        assert vals == {"foo": "bar"}
+        assert vals == {"foo": "bar", "quux": "baz"}
 
 def test_from_relative_import_over(strict_xfail, delete_nonliteral):
     vals = literal_exec(
-        "foo = 'bar'\nfrom .quux import foo\n",
+        "foo = 'bar'\nquux = 'baz'\nfrom .quux import foo\n",
         strict=strict_xfail,
         delete_nonliteral=delete_nonliteral,
     )
     if delete_nonliteral:
-        assert vals == {}
+        assert vals == {"quux": "baz"}
     else:
-        assert vals == {"foo": "bar"}
+        assert vals == {"foo": "bar", "quux": "baz"}
 
 def test_from_dot_import_over(strict_xfail, delete_nonliteral):
     vals = literal_exec(
