@@ -64,6 +64,20 @@ def test_from_import_over(strict_xfail, delete_nonliteral):
     else:
         assert vals == {"foo": "bar", "quux": "baz"}
 
+def test_from_import_as_over(strict_xfail, delete_nonliteral):
+    vals = literal_exec(
+        "foo = 'bar'\n"
+        "quux = 'baz'\n"
+        "xyzzy = 'plugh'\n"
+        "from quux import foo as xyzzy\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    )
+    if delete_nonliteral:
+        assert vals == {"foo": "bar", "quux": "baz"}
+    else:
+        assert vals == {"foo": "bar", "quux": "baz", "xyzzy": "plugh"}
+
 def test_from_relative_import_over(strict_xfail, delete_nonliteral):
     vals = literal_exec(
         "foo = 'bar'\nquux = 'baz'\nfrom .quux import foo\n",
@@ -86,10 +100,29 @@ def test_from_dot_import_over(strict_xfail, delete_nonliteral):
     else:
         assert vals == {"foo": "bar"}
 
+def test_import_dotted(strict_xfail, delete_nonliteral):
+    vals = literal_exec(
+        "foo = 'bar'\nbaz = 'quux'\nimport foo.baz\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    )
+    if delete_nonliteral:
+        assert vals == {"baz": "quux"}
+    else:
+        assert vals == {"foo": "bar", "baz": "quux"}
+
+def test_import_dotted_as(strict_xfail, delete_nonliteral):
+    vals = literal_exec(
+        "foo = 'bar'\nbaz = 'quux'\nxyzzy = 'plugh'\nimport foo.baz as xyzzy\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    )
+    if delete_nonliteral:
+        assert vals == {"foo": "bar", "baz": "quux"}
+    else:
+        assert vals == {"foo": "bar", "baz": "quux", "xyzzy": "plugh"}
+
 # multiple variables are assigned literal values, only some are later reassigned nonliterals
-# assign nonliteral, reassign literal
 # some imported names don't mask any variables
-# import foo.bar
 # import foo, bar
-# from ... import ... as ...
-# from ... import *
+# x = y = ...; x = func

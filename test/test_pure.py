@@ -117,6 +117,15 @@ from __future__ import unicode_literals
     }
     assert isinstance(vals["__doc__"], text_type)
 
+def test_overwritten_docstring(strict, delete_nonliteral):
+    assert literal_exec('''
+""" This is a module docstring.  It is stored in __doc__. """
+__doc__ = "Wait, never mind."
+''',
+    strict=strict,
+    delete_nonliteral=delete_nonliteral,
+) == {"__doc__": "Wait, never mind."}
+
 def test_concat_str_literals(strict, delete_nonliteral):
     assert literal_exec(
         'foo = "bar" "baz"',
@@ -186,13 +195,36 @@ def test_unicode_input(strict, delete_nonliteral):
     assert vals == {"snowman": "☃"}
     assert isinstance(vals["snowman"], str)
 
-# error on __future__ import in bad location
-# source file encodings
-# exec'ing bytes in Python 3?
+def test_bytes_input(strict, delete_nonliteral):
+    vals = literal_exec(
+        b'# -*- coding: utf-8 -*-\nsnowman = "\xE2\x98\x83"',
+        strict=strict,
+        delete_nonliteral=delete_nonliteral,
+    )
+    assert vals == {"snowman": "☃"}
+    assert isinstance(vals["snowman"], str)
+
+def test_latin1_input(strict, delete_nonliteral):
+    vals = literal_exec(
+        b'# -*- coding: latin-1 -*-\nnot_snowman = "\xE2\x98\x83"',
+        strict=strict,
+        delete_nonliteral=delete_nonliteral,
+    )
+    assert vals == {"not_snowman": "\xE2\x98\x83"}
+    assert isinstance(vals["not_snowman"], str)
+
+def test_bad_future(strict, delete_nonliteral):
+    with pytest.raises(SyntaxError):
+        literal_exec(
+            "foo = 'bar'\nfrom __future__ import unicode_literals\n",
+            strict=strict,
+            delete_nonliteral=delete_nonliteral,
+        )
+
 # a, *b, c = ... (Python 3.0+)
 # concatenation of a bytes literal with an adjacent unicode literal?
 # unicode literals
 # bytes literals
 # variable annotations?
 # complex number literals
-# reassigning __doc__
+# literal_execfile on source files with different encodings

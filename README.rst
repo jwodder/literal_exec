@@ -73,6 +73,9 @@ Intended Behavior
   ``__future__`` import, a docstring, or otherwise ignored will cause a
   ``NonLiteralAssignmentError`` to be raised.
 
+- The only effect of ``from foo import *`` is to cause a
+  ``NonLiteralAssignmentError`` to be raised if ``strict`` is ``True``.
+
 
 Related Prior Art
 =================

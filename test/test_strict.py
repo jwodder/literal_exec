@@ -7,14 +7,14 @@ difference
 
 from   literal_exec import literal_exec
 
-def test_strict_nonliteral(strict_xfail, delete_nonliteral):
+def test_nonliteral(strict_xfail, delete_nonliteral):
     assert literal_exec(
         "foo = 'bar'\nbar = range(42)\nbaz = 42\n",
         strict=strict_xfail,
         delete_nonliteral=delete_nonliteral,
     ) == {"foo": "bar", "baz": 42}
 
-def test_list_assign_strict_nonliteral(strict_xfail, delete_nonliteral):
+def test_list_assign_nonliteral(strict_xfail, delete_nonliteral):
     assert literal_exec(
         'foo, bar, baz = "quux", range(42), "glarch"',
         strict=strict_xfail,
@@ -77,6 +77,13 @@ def test_import_as_no_reassign(strict_xfail, delete_nonliteral):
 def test_from_import_no_reassign(strict_xfail, delete_nonliteral):
     assert literal_exec(
         "foo = 'bar'\nfrom foo import quux\n",
+        strict=strict_xfail,
+        delete_nonliteral=delete_nonliteral,
+    ) == {"foo": "bar"}
+
+def test_import_star(strict_xfail, delete_nonliteral):
+    assert literal_exec(
+        "foo = 'bar'\nfrom foo import *\n",
         strict=strict_xfail,
         delete_nonliteral=delete_nonliteral,
     ) == {"foo": "bar"}
