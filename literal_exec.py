@@ -47,11 +47,15 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
                     literal_eval(statement.value)
                 except (TypeError, ValueError):
                     raise NonLiteralAssignmentError()
-        elif isinstance(statement, ast.ImportFrom):
-            if statement.module == '__future__' and not statement.level:
-                pass
-            elif strict:
+        elif isinstance(statement, ast.ImportFrom) and \
+                statement.module == '__future__' and not statement.level:
+            pass
+        elif isinstance(statement, (ast.Import, ast.ImportFrom)):
+            if strict:
                 raise NonLiteralAssignmentError()
+            elif delete_nonliteral:
+                for alias in statement.names:
+                    result.pop(alias.asname or alias.name, None)
         elif isinstance(statement, ast.Pass):
             pass
         elif strict:
