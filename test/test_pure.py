@@ -5,9 +5,12 @@ expressions, and/or `__future__` imports; such code should be evaluated the
 same way regardless of the values of ``strict`` and ``delete_nonliteral``
 """
 
+import os.path
 import pytest
 from   six          import PY2, text_type
-from   literal_exec import literal_exec
+from   literal_exec import literal_exec, literal_execfile
+
+datadir = os.path.join(os.path.dirname(__file__), 'data')
 
 def test_empty(strict, delete_nonliteral):
     assert literal_exec(
@@ -195,7 +198,7 @@ def test_unicode_input(strict, delete_nonliteral):
     assert vals == {"snowman": "☃"}
     assert isinstance(vals["snowman"], str)
 
-def test_bytes_input(strict, delete_nonliteral):
+def test_utf8_input(strict, delete_nonliteral):
     vals = literal_exec(
         b'# -*- coding: utf-8 -*-\nsnowman = "\xE2\x98\x83"',
         strict=strict,
@@ -212,6 +215,42 @@ def test_latin1_input(strict, delete_nonliteral):
     )
     assert vals == {"not_snowman": "\xE2\x98\x83"}
     assert isinstance(vals["not_snowman"], str)
+
+def test_utf8_file(strict, delete_nonliteral):
+    vals = literal_execfile(
+        os.path.join(datadir, 'utf8.py'),
+        strict=strict,
+        delete_nonliteral=delete_nonliteral,
+    )
+    assert vals == {"snowman": "☃"}
+    assert isinstance(vals["snowman"], str)
+
+def test_latin1_file(strict, delete_nonliteral):
+    vals = literal_execfile(
+        os.path.join(datadir, 'latin1.py'),
+        strict=strict,
+        delete_nonliteral=delete_nonliteral,
+    )
+    assert vals == {"not_snowman": "\xE2\x98\x83"}
+    assert isinstance(vals["not_snowman"], str)
+
+def test_utf8_unicode(strict, delete_nonliteral):
+    vals = literal_exec(
+        u'# -*- coding: utf-8 -*-\nsnowman = "☃"',
+        strict=strict,
+        delete_nonliteral=delete_nonliteral,
+    )
+    assert vals == {"snowman": "☃"}
+    assert isinstance(vals["snowman"], str)
+
+def test_latin1_unicode(strict, delete_nonliteral):
+    vals = literal_exec(
+        u'# -*- coding: latin-1 -*-\nsnowman = "☃"',
+        strict=strict,
+        delete_nonliteral=delete_nonliteral,
+    )
+    assert vals == {"snowman": "☃"}
+    assert isinstance(vals["snowman"], str)
 
 def test_bad_future(strict, delete_nonliteral):
     with pytest.raises(SyntaxError):

@@ -10,7 +10,7 @@ import ast
 import sys
 
 def literal_execfile(path, strict=False, delete_nonliteral=True):
-    with open(path) as fp:
+    with open(path, 'rb') as fp:
         src = fp.read()
     return literal_exec(src, strict=strict, delete_nonliteral=delete_nonliteral)
 

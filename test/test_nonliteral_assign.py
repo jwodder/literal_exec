@@ -126,3 +126,7 @@ def test_import_dotted_as(strict_xfail, delete_nonliteral):
 # some imported names don't mask any variables
 # import foo, bar
 # x = y = ...; x = func
+# function & class definitions
+# `for ... in` variables
+# comprehension variables in Python 2?
+# `except` variables in Python 2?

@@ -88,6 +88,5 @@ def test_import_star(strict_xfail, delete_nonliteral):
         delete_nonliteral=delete_nonliteral,
     ) == {"foo": "bar"}
 
-# function & class definitions
 # raising/causing an error in the middle of the source?
 # variables that are only ever assigned nonliteral expressions
