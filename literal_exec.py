@@ -55,7 +55,7 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
                 raise NonLiteralAssignmentError()
             elif delete_nonliteral:
                 for alias in statement.names:
-                    result.pop(alias.asname or alias.name, None)
+                    result.pop(alias.asname or alias.name.split('.')[0], None)
         elif isinstance(statement, ast.Pass):
             pass
         elif strict:
