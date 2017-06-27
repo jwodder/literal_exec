@@ -130,3 +130,6 @@ def test_import_dotted_as(strict_xfail, delete_nonliteral):
 # `for ... in` variables
 # comprehension variables in Python 2?
 # `except` variables in Python 2?
+# augmented assignment
+# splat assignment (Python 3)
+# list assignment with a different number of items on the left & right

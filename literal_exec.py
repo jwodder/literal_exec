@@ -40,7 +40,12 @@ def literal_exec(src, strict=False, delete_nonliteral=True):
                         result.pop(target.id, None)
             else:
                 for target in statement.targets:
-                    result[target.id] = value
+                    if isinstance(target, ast.Tuple):
+                        for t,v in zip(target.elts, value):
+                            assert isinstance(t, ast.Name)
+                            result[t.id] = v
+                    else:
+                        result[target.id] = value
         elif isinstance(statement, ast.Expr):
             if strict:
                 try:
