@@ -133,3 +133,4 @@ def test_import_dotted_as(strict_xfail, delete_nonliteral):
 # augmented assignment
 # splat assignment (Python 3)
 # list assignment with a different number of items on the left & right
+# list assignment with an actual list on the left
