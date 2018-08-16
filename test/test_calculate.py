@@ -38,3 +38,4 @@ def test_divzero():
 # __matmul__ ?
 # operations on strings
 # operations on sets
+# and, or, not, ... if ... else

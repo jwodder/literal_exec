@@ -1,7 +1,8 @@
-.. image:: http://www.repostatus.org/badges/latest/wip.svg
-    :target: http://www.repostatus.org/#wip
-    :alt: Project Status: WIP — Initial development is in progress, but there
-          has not yet been a stable, usable release suitable for the public.
+.. image:: https://www.repostatus.org/badges/latest/abandoned.svg
+    :target: https://www.repostatus.org/#abandoned
+    :alt: Project Status: Abandoned – Initial development has started, but
+          there has not yet been a stable, usable release; the project has been
+          abandoned and the author(s) do not intend on continuing development.
 
 .. image:: https://travis-ci.org/jwodder/literal_exec.svg?branch=master
     :target: https://travis-ci.org/jwodder/literal_exec
@@ -15,9 +16,6 @@
 
 `GitHub <https://github.com/jwodder/literal_exec>`_
 | `Issues <https://github.com/jwodder/literal_exec/issues>`_
-
-*This is very much a work in progress.  Until the "build" badge above turns
-green, assume none of this works.*
 
 ``literal_exec`` provides a Python function of the same name that takes the
 source for a Python module and — without running any of the code in that module
